@@ -4,16 +4,12 @@
 - [ ] 1.1 Modifier le composant ProductSearch pour utiliser la recherche
 
 #### Problématique  :
-Le probléme principale c'est comment envoyer la valeur 'searchTerm' dans le composant ProductSearch vers le composant ProductListe pour filtrer les produit par 'searchTerm'
-#### Solution :
-pour envoyer la valeur searchTerm dans le composant ProductSearch vers le composant ProductListe , j'ai deplacé le hook 
-puis j'ai envoiée la référence de setSearchTerm au composant ProductSearch, comme ça quand l utilisateur tapez sur l'input le composant App reçois la valeur setSearchTerm et l envoyé au composant ProductListe dans le props 
-Afin de ProductListe filtré par searchTerm   */
+Le problème principal est d'envoyer la valeur searchTerm du composant ProductSearch vers le composant ProductList afin de filtrer les produits en fonction de ce terme.
 
-```
- [searchTerm, setSearchTerm] = useState("");
-```
- 
+
+#### Solution :
+Pour transmettre la valeur searchTerm du composant ProductSearch à ProductList, j'ai déplacé le hook useState au niveau du composant parent (App). Ensuite, j'ai passé la fonction setSearchTerm en prop à ProductSearch. Ainsi, lorsque l'utilisateur saisit du texte dans l'input, App met à jour searchTerm, qui est ensuite transmis à ProductList pour filtrer les produits.
+
 _Réponse pour l'exercice 1 :_
 
 _App.js:_
