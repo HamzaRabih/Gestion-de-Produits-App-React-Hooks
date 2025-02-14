@@ -11,6 +11,9 @@ const App = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   // TODO: Exercice 2.2 - Ajouter l'état pour la langue
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+
   return (
     <ThemeContext.Provider value={{ isDarkTheme, setIsDarkTheme }}>
       {/* TODO: Exercice 2.1 - Wrapper avec LanguageContext.Provider */}
@@ -23,8 +26,8 @@ const App = () => {
           </div>
         </header>
         <main>
-          <ProductSearch />
-          <ProductList />
+        <ProductSearch setSearchTerm={setSearchTerm} />
+        <ProductList searchTerm={searchTerm} />
         </main>
       </div>
     </ThemeContext.Provider>
