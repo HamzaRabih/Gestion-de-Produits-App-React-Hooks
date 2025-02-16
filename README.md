@@ -1,5 +1,5 @@
 ## Exercice 1 : État et Effets 
-#### Objectif : Implémenter une recherche en temps réel
+### Objectif : Implémenter une recherche en temps réel
 
 ### 1.1 Modifier le composant ProductSearch pour utiliser la recherche
 
@@ -122,3 +122,85 @@ const ProductSearch = ({setSearchTerm}) => {
 
 #### Captures d'écran:
 <img src="Capture/1.png">
+
+## Exercice 2 : Context et Internationalisation
+
+### Objectif :
+L'objectif est de gérer les préférences de langue dans l'application en permettant aux utilisateurs de changer la langue de l'interface entre Français et Anglais.
+
+ ### 2.1 Création du LanguageContext
+
+Nous avons défini un contexte React directement dans App.js pour gérer la langue sélectionnée. Un useState permet de stocker la langue actuelle, et l'application est enveloppée avec LanguageContext.Provider afin que tous les composants puissent y accéder et s'adapter dynamiquement à la langue choisie.
+
+
+### 2.2 Ajouter le sélecteur de langue
+Nous avons ajouté un sélecteur (select) permettant à l'utilisateur de changer la langue.
+
+
+_Réponse pour l'exercice 2 :_
+
+_App.js_
+```jsx
+const [language, setLanguage] = useState("FR"); 
+const t = translations[language]; 
+
+ return (
+{....}
+<LanguageContext.Provider value={{language, setLanguage }} >
+
+      <div className={`container ${isDarkTheme ? 'bg-dark text-light' : 'bg-light'}`}>
+        <header className="my-4">
+          <h1 className="text-center">{t.title}</h1>
+          <div className="d-flex justify-content-end gap-2">
+            <ThemeToggle />
+            {/* TODO: Exercice 2.2 - Ajouter le sélecteur de langue */
+            <select onChange={(e) => setLanguage(e.target.value)} className={`form-select-sm ${isDarkTheme ? 'bg-dark text-light' : ''}`}>
+              <option value="FR">{language=="FR"?"Français":"French"}</option>
+              <option value="EN">{language=="FR"?"Anglais":"English"}</option>
+            </select>
+            }
+          </div>
+        </header>
+        <main>
+        <ProductSearch setSearchTerm={setSearchTerm}  />
+        <ProductList searchTerm={searchTerm} />
+        </main>
+      </div>  
+      </LanguageContext.Provider>
+      {...}
+      )
+```
+
+Nous avons aussi centralisé les traductions dans un fichier séparé pour éviter la redondance et faciliter la gestion.
+
+_translations.js_
+```jsx
+const translations = {
+  FR: {
+    title: "Catalogue de Produits",
+    price: "Prix",
+    loading: "Chargement...",
+    error: "Erreur",
+    darkMode: "Mode Sombre",
+    lightMode: "Mode Clair",
+    languageFr: "Français",
+    languageEn: "Anglais",
+  },
+  EN: {
+    title: "Product Catalog",
+    price: "Price",
+    loading: "Loading...",
+    error: "Error",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
+    languageFr: "French",
+    languageEn: "English",
+  }
+};
+
+export default translations;
+
+```
+
+#### Captures d'écran:
+<img src="Capture/2.png">

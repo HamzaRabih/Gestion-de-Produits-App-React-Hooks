@@ -10,7 +10,6 @@ const ProductSearch = ({setSearchTerm}) => {
   const [inputValue, setInputValue] = useState("");
   const [debouncedSearchTerm] = useDebounce(inputValue,1000);
 
-
   useEffect(() => {
     setSearchTerm(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
