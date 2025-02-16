@@ -204,3 +204,75 @@ export default translations;
 
 #### Captures d'écran:
 <img src="Capture/2.png">
+
+## Exercice 3 : Hooks Personnalisés
+Objectif : Créer des hooks réutilisables
+
+### 3.1 Créer le hook useDebounce
+
+Le hook useDebounce permet de retarder l'exécution d'une action après un certain délai. Il est utile pour éviter les appels API excessifs lors de la saisie d'un champ de recherche.
+
+_useDebounce.js_
+```jsx
+import { useState, useEffect } from "react";
+
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
+export default useDebounce;
+
+
+```
+## 3.2 Créer le hook useLocalStorage
+
+ Le hook useLocalStorage permet de stocker et récupérer des données localement sur le navigateur.
+
+Implémentation de useLocalStorage :
+```jsx
+import { useState, useEffect } from "react";
+
+const useLocalStorage = (key, initialValue) => {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error("Erreur LocalStorage:", error);
+      return initialValue;
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(storedValue));
+  }, [key, storedValue]);
+
+  return [storedValue, setStoredValue];
+};
+
+export default useLocalStorage;
+
+```
+
+Utilisation dans App.js pour stocker la langue sélectionnée :
+
+```jsx
+const [language, setLanguage] = useLocalStorage("language", "FR");
+
+<LanguageContext.Provider value={{ language, setLanguage }}>
+  <select onChange={(e) => setLanguage(e.target.value)}>
+    <option value="FR">Français</option>
+    <option value="EN">English</option>
+  </select>
+</LanguageContext.Provider>
+```

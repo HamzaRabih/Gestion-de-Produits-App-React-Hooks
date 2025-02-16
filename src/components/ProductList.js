@@ -59,7 +59,7 @@ const ProductList = ({searchTerm}) => {
                 <h5 className="card-title">{product.title}</h5>
                 <p className="card-text">{product.description}</p>
                 <p className="card-text">
-                  <strong>{t.price } :</strong>
+                  <strong>{t.price} :</strong>
                   {product.price} €
                 </p>
               </div>

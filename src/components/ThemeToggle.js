@@ -12,8 +12,8 @@ const ThemeToggle = () => {
       onClick={() => setIsDarkTheme(!isDarkTheme)}
       className={`px-5 py-2 rounded ${
         isDarkTheme 
-          ? 'bg-dark text-light border border-light' 
-          : 'bg-light text-dark border border-dark'
+          ? 'bg-dark text-light border border-light'  
+          : 'bg-light text-dark border border-dark'   
       }`}
     >
       {isDarkTheme ? t.darkMode: t.lightMode}

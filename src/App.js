@@ -3,7 +3,7 @@ import ProductList from './components/ProductList';
 import ProductSearch from './components/ProductSearch';
 import ThemeToggle from './components/ThemeToggle';
 import translations from './translations';
-
+import useLocalStorage from './hooks/useLocalStorage';
 // TODO: Exercice 2.1 - Créer le LanguageContext
 export const LanguageContext = createContext();
 export const ThemeContext = createContext();
@@ -11,8 +11,8 @@ export const ThemeContext = createContext();
 const App = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-    // TODO: Exercice 2.2 - Ajouter l'état pour la langue
-  const [language, setLanguage] = useState("FR");
+  // TODO: Exercice 2.2 - Ajouter l'état pour la langue
+  const [language, setLanguage] = useLocalStorage("language", "FR");
   const t = translations[language];
   
   return (
@@ -27,7 +27,9 @@ const App = () => {
           <div className="d-flex justify-content-end gap-2">
             <ThemeToggle />
             {/* TODO: Exercice 2.2 - Ajouter le sélecteur de langue */
-            <select onChange={(e) => setLanguage(e.target.value)} className={`form-select-sm ${isDarkTheme ? 'bg-dark text-light' : ''}`}>
+            <select onChange={(e) => setLanguage(e.target.value)}
+            value={language}
+             className={`form-select-sm ${isDarkTheme ? 'bg-dark text-light' : ''}`}>
               <option value="FR">{language=="FR"?"Français":"French"}</option>
               <option value="EN">{language=="FR"?"Anglais":"English"}</option>
             </select>
