@@ -16,7 +16,7 @@ const ThemeToggle = () => {
           : 'bg-light text-dark border border-dark'   
       }`}
     >
-      {isDarkTheme ? t.darkMode: t.lightMode}
+      {isDarkTheme ? t.lightMode : t.darkMode}
     </button>
   );
 };

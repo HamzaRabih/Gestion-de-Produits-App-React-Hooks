@@ -4,6 +4,11 @@ const translations = {
       price: "Prix",
       loading: "Chargement",
       error: "Erreur",
+      reload: "Recharger",
+      nextPage:"Suivant",
+      previousPage:"Précédent",
+      page: "Page",
+      of: "sur",
       darkMode: "Mode Sombre",
       lightMode: "Mode Clair",
     },
@@ -12,8 +17,14 @@ const translations = {
       price: "Price",
       loading: "Loading",
       error: "Error",
+      reload: "Reload",
+      nextPage:"Next",
+      previousPage:"Previous",
+      page: "Page",
+      of: "of",
       darkMode: "Dark Mode",
       lightMode: "Light Mode",
+
     }
   };
   

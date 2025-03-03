@@ -4,11 +4,10 @@ import { ThemeContext } from '../App';
 
 const ProductSearch = ({setSearchTerm}) => {
   const { isDarkTheme } = useContext(ThemeContext);
-  // TODO: Exercice 2.1 - Utiliser le LanguageContext
+  // 2.1 - Utiliser le LanguageContext
   const [inputValue, setInputValue] = useState("");
 
-  // TODO: Exercice 1.2 - Utiliser le hook useDebounce
-  //const [debouncedSearchTerm] = useDebounce(inputValue,1000);
+  //1.2 - Utiliser le hook useDebounce
   const [debouncedSearchTerm] = useDebounce(inputValue, 1000);
 
 

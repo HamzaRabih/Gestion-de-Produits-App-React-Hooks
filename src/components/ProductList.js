@@ -2,22 +2,29 @@ import React, { useContext } from 'react';
 import { LanguageContext, ThemeContext } from '../App';
 import useProductSearch from '../hooks/useProductSearch';
 import translations from '../translations';
+
 const ProductList = ({searchTerm}) => {
   const { isDarkTheme } = useContext(ThemeContext);
-  // TODO: Exercice 2.1 - Utiliser le LanguageContext pour les traductions
+  //2.1 - Utiliser le LanguageContext pour les traductions
   const { language } = useContext(LanguageContext);
   const t = translations[language];
-
+  var filtredProducts;
   const { 
     products, 
     loading, 
     error,
-    // TODO: Exercice 4.1 - Récupérer la fonction de rechargement
-    // TODO: Exercice 4.2 - Récupérer les fonctions et états de pagination
+    // 4.1 - Récupérer la fonction de rechargement
+    reload,
+    previousPage,
+    nextPage,
+    currentPage,
+    totalPages,
+    itemsPerPage,
+    //4.2 - Récupérer les fonctions et états de pagination
   } = useProductSearch();
   
   if(searchTerm!=''){
-    var filtredProducts=products.filter(
+     filtredProducts=products.filter(
       (p)=>p.title.toUpperCase().includes(searchTerm.toUpperCase())
       || p.description.toUpperCase().includes(searchTerm.toUpperCase())
       || p.price.toString().toUpperCase().includes(searchTerm.toUpperCase())
@@ -39,10 +46,46 @@ const ProductList = ({searchTerm}) => {
       {language=="FR"?"Erreur":"Error"}: {error}
     </div>
   );
-  
+
+  // Filtrage et pagination
+   filtredProducts = products
+  .filter(product => product.title.toLowerCase().includes(searchTerm.toLowerCase()))
+  .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div>
-      {/* TODO: Exercice 4.1 - Ajouter le bouton de rechargement */}
+      <div class="d-flex justify-content-between">
+         {/* Bouton de rechargement */}
+          <div >
+            <button className="btn btn-primary btn-sm" onClick={reload}>
+              🔄 {t.reload}
+            </button>
+          </div>
+
+        {/*4.2 - Ajouter les contrôles de pagination */}
+        <nav >
+          <ul className="pagination">
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={previousPage} disabled={currentPage === 1}>
+                {t.previousPage}
+              </button>
+            </li>
+            <li className="page-item disabled">
+              <span className="page-link">
+                {t.page} {currentPage}  {t.of } {totalPages}
+              </span>
+            </li>
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={nextPage} disabled={currentPage === totalPages}>
+                {t.nextPage} 
+              </button>
+            </li>
+          </ul>
+        </nav>
+ 
+      </div>
+
+     
       <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         {filtredProducts.map(product => (
           <div key={product.id} className="col">
@@ -67,29 +110,7 @@ const ProductList = ({searchTerm}) => {
           </div>
         ))}
       </div>
-      
-      {/* TODO: Exercice 4.2 - Ajouter les contrôles de pagination */}
-      {/* Exemple de structure pour la pagination :
-      <nav className="mt-4">
-        <ul className="pagination justify-content-center">
-          <li className="page-item">
-            <button className="page-link" onClick={previousPage}>
-              Précédent
-            </button>
-          </li>
-          <li className="page-item">
-            <span className="page-link">
-              Page {currentPage} sur {totalPages}
-            </span>
-          </li>
-          <li className="page-item">
-            <button className="page-link" onClick={nextPage}>
-              Suivant
-            </button>
-          </li>
-        </ul>
-      </nav>
-      */}
+
     </div>
   );
 };

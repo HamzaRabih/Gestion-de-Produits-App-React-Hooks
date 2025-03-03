@@ -4,21 +4,21 @@ import ProductSearch from './components/ProductSearch';
 import ThemeToggle from './components/ThemeToggle';
 import translations from './translations';
 import useLocalStorage from './hooks/useLocalStorage';
-// TODO: Exercice 2.1 - Créer le LanguageContext
+// 2.1 - Créer le LanguageContext
 export const LanguageContext = createContext();
 export const ThemeContext = createContext();
 
 const App = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  // TODO: Exercice 2.2 - Ajouter l'état pour la langue
+  // 2.2 - Ajouter l'état pour la langue
   const [language, setLanguage] = useLocalStorage("language", "FR");
   const t = translations[language];
   
   return (
     <ThemeContext.Provider value={{ isDarkTheme, setIsDarkTheme }}>
       
-      {/* TODO: Exercice 2.1 - Wrapper avec LanguageContext.Provider */
+      {/*  2.1 - Wrapper avec LanguageContext.Provider */
       <LanguageContext.Provider value={{language, setLanguage }} >
 
       <div className={`container ${isDarkTheme ? 'bg-dark text-light' : 'bg-light'}`}>
@@ -26,7 +26,7 @@ const App = () => {
           <h1 className="text-center">{t.title}</h1>
           <div className="d-flex justify-content-end gap-2">
             <ThemeToggle />
-            {/* TODO: Exercice 2.2 - Ajouter le sélecteur de langue */
+            {/*2.2 - Ajouter le sélecteur de langue */
             <select onChange={(e) => setLanguage(e.target.value)}
             value={language}
              className={`form-select-sm ${isDarkTheme ? 'bg-dark text-light' : ''}`}>

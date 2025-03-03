@@ -1,5 +1,27 @@
-## Exercice 1 : État et Effets 
-### Objectif : Implémenter une recherche en temps réel
+
+# 📌Application de Gestion de Produits
+Cette application a pour objectif de mettre en pratique l'utilisation des Hooks React (useState, useEffect, useContext) ainsi que la création de Hooks personnalisés.
+<img src="Capture/3.png">
+
+
+## 🚀 Fonctionnalités
+- 🔍 Recherche en temps réel avec filtrage dynamique des produits
+- 🌍 Gestion des préférences de langue (Français/Anglais)
+- 🔄 Rechargement des produits pour mettre à jour la liste
+- 📑 Pagination pour naviguer entre les pages de résultats
+
+
+## 🛠️ Technologies utilisées
+- **React.js** : Une bibliothèque JavaScript pour construire des interfaces utilisateur dynamiques.
+- **CSS** : Style moderne et responsive pour une meilleure expérience utilisateur.
+
+## 🎯 Objectifs du projet
+- Fournir une base simple pour apprendre et explorer les concepts fondamentaux de React.js, comme les composants, états et props.
+- Proposer une interface utilisateur minimaliste et conviviale pour gérer des tâches.
+
+
+## 🏗️ 1 État et Effets 
+### 🎯 Objectif : Implémenter une recherche en temps réel
 
 ### 1.1 Modifier le composant ProductSearch pour utiliser la recherche
 
@@ -7,7 +29,7 @@
 Le problème principal est d'envoyer la valeur searchTerm du composant ProductSearch vers le composant ProductList afin de filtrer les produits en fonction de ce terme.
 
 
-#### Solution :
+#### ✅ Solution :
 Pour transmettre la valeur searchTerm du composant ProductSearch à ProductList, j'ai déplacé le hook useState au niveau du composant parent (App). Ensuite, j'ai passé la fonction setSearchTerm en prop à ProductSearch. Ainsi, lorsque l'utilisateur saisit du texte dans l'input, App met à jour searchTerm, qui est ensuite transmis à ProductList pour filtrer les produits.
 
 _Réponse pour l'exercice 1 :_
@@ -79,7 +101,7 @@ const ProductSearch = ({setSearchTerm}) => {
 ```
 
 
-### 1.2 Implémenter le debounce sur la recherche
+### ⏳ 1.2 Implémenter le debounce sur la recherche
 
 Pour implémenter le debounce, nous allons utiliser le hook useDebounce.
 
@@ -123,7 +145,7 @@ const ProductSearch = ({setSearchTerm}) => {
 #### Captures d'écran:
 <img src="Capture/1.png">
 
-## Exercice 2 : Context et Internationalisation
+## 🌍 2 Context et Internationalisation
 
 ### Objectif :
 L'objectif est de gérer les préférences de langue dans l'application en permettant aux utilisateurs de changer la langue de l'interface entre Français et Anglais.
@@ -205,7 +227,7 @@ export default translations;
 #### Captures d'écran:
 <img src="Capture/2.png">
 
-## Exercice 3 : Hooks Personnalisés
+## 🔄 3 Hooks Personnalisés
 Objectif : Créer des hooks réutilisables
 
 ### 3.1 Créer le hook useDebounce
@@ -276,3 +298,155 @@ const [language, setLanguage] = useLocalStorage("language", "FR");
   </select>
 </LanguageContext.Provider>
 ```
+
+## 📑 4 Gestion Asynchrone et Pagination
+
+### Objectif
+
+L'objectif est de :
+- Ajouter un bouton de rechargement pour mettre à jour la liste des produits.
+- Implémenter un système de pagination permettant aux utilisateurs de naviguer entre les pages.
+
+### 4.1 - Ajouter le bouton de rechargement
+ 
+Un bouton de rechargement a été ajouté pour permettre à l'utilisateur de rafraîchir la liste des produits manuellement.
+
+
+ProductList.js_
+````jsx
+<div >
+  <button className="btn btn-primary btn-sm" onClick={reload}>
+   🔄 {t.reload}
+  </button> 
+</div>          
+````
+
+La fonction reload est utilisée pour remettre à zéro l'état des erreurs et relancer le chargement.
+
+_useProductSearch.js_
+````jsx
+const useProductSearch = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);  
+  const [totalPages, setTotalPage] = useState(0);  
+  const [currentPage, setCurrentPage] = useState(1);  
+  const itemsPerPage=10;
+
+  // TODO: Exercice 4.2 - Ajouter l'état pour la pagination
+  useEffect(() => {
+    fetchProducts();
+  }, []); 
+  //....
+  // 4.1 - Ajouter la fonction de rechargement
+  const reload = async () => {
+    setLoading(true);
+    setError(null);
+    await fetchProducts();
+  };
+
+  return { 
+    products, 
+    loading, 
+    error,
+    //4.1 - Retourner la fonction de rechargement
+    reload,
+    previousPage,
+    nextPage,
+    totalPages,
+    currentPage,
+    itemsPerPage,
+  };
+};
+````
+
+### 4.2 - Implémentation de la pagination
+
+- La pagination permet de limiter l'affichage des produits à 10 par page.
+- L'état currentPage suit la page actuelle.
+- totalPages est calculé dynamiquement en fonction du nombre total de produits et du nombre d'éléments affichés par page.
+
+_useProductSearch.js_
+```jsx
+const useProductSearch = () => {
+  //... 
+  const [totalPages, setTotalPage] = useState(0);  
+  const [currentPage, setCurrentPage] = useState(1);  
+  const itemsPerPage=10;
+  //...
+  // 4.2 - Ajouter les fonctions pour la pagination
+  function nextPage() {
+    setCurrentPage(prev => (prev < totalPages ? prev + 1 : prev));
+  }
+
+  function previousPage() {
+    setCurrentPage(prev => (prev > 1 ? prev - 1 : prev));
+  }
+  //....
+  return { 
+    products, 
+    loading, 
+    error,
+    reload,
+    // 4.2 - Retourner les fonctions et états de pagination
+    previousPage,
+    nextPage,
+    totalPages,
+    currentPage,
+    itemsPerPage,
+  };
+};
+```
+
+Filtrage et pagination des produits
+On récupère seulement les produits correspondant à la page actuelle :
+```jsx
+
+const ProductList = ({searchTerm}) => {
+  //...
+  // Filtrage et pagination
+   filtredProducts = products
+  .filter(product => product.title.toLowerCase().includes(searchTerm.toLowerCase()))
+  .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  return (
+    <div>
+      <div class="d-flex justify-content-between">
+        {/* Bouton de rechargement */}
+        {/* 4.2 - Ajouter les contrôles de pagination */}
+        <nav >
+          <ul className="pagination">
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={previousPage} disabled={currentPage === 1}>
+                {t.previousPage}
+              </button>
+            </li>
+            <li className="page-item disabled">
+              <span className="page-link">
+                {t.page} {currentPage}  {t.of } {totalPages}
+              </span>
+            </li>
+            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+              <button className="page-link" onClick={nextPage} disabled={currentPage === totalPages}>
+                {t.nextPage} 
+              </button>
+            </li>
+          </ul>
+        </nav>
+ 
+      </div>
+
+     
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {filtredProducts.map(product => (
+          <div key={product.id} className="col">
+           {/*...*/}
+        ))}
+      </div>
+
+    </div>
+  );
+};
+```
+#### Captures d'écran:
+<img src="Capture/3.png">
